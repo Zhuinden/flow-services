@@ -59,9 +59,27 @@ class ServicesManager {
             parent = keyToManagedServicesMap.get(parentKey).services;
         }
         ensureNode(parent, key).usageCount++;
+        if(key instanceof Services.Composite) {
+            Services.Composite composite = (Services.Composite) key;
+            List<Services.Child> children = composite.keys();
+            for(int i = 0; i < children.size(); i++) {
+                Services.Child child = children.get(i);
+                if(!child.parent().equals(key)) {
+                    throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
+                }
+                setUp(child);
+            }
+        }
     }
 
     void tearDown(Object key) {
+        if(key instanceof Services.Composite) {
+            Services.Composite composite = (Services.Composite) key;
+            List<Services.Child> children = composite.keys();
+            for(int i = children.size() - 1; i >= 0; i--) {
+                tearDown(children.get(i));
+            }
+        }
         decrementAndMaybeRemoveKey(key);
         if(key instanceof Services.Child) {
             tearDown(((Services.Child)key).parent());

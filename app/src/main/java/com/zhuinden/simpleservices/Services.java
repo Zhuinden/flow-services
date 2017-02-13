@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.zhuinden.simpleservices.Preconditions.checkNotNull;
@@ -27,6 +28,10 @@ import static com.zhuinden.simpleservices.Preconditions.checkNotNull;
 public class Services {
     public interface Child {
         Object parent();
+    }
+
+    public interface Composite {
+        List<Child> keys();
     }
 
     public static final class Builder
