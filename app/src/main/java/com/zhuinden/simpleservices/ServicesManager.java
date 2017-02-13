@@ -58,36 +58,37 @@ class ServicesManager {
             setUp(parentKey);
             parent = keyToManagedServicesMap.get(parentKey).services;
         }
-        ensureNode(parent, key).usageCount++;
+        ReferenceCountedServices managedService = createNonExistentManagedServicesAndIncrementUsageCount(parent, key);
+        parent = managedService.services;
         if(key instanceof Services.Composite) {
             Services.Composite composite = (Services.Composite) key;
-            List<Services.Child> children = composite.keys();
+            List<? extends Services.Child> children = composite.keys();
             for(int i = 0; i < children.size(); i++) {
                 Services.Child child = children.get(i);
                 if(!child.parent().equals(key)) {
                     throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
                 }
-                setUp(child);
+                createNonExistentManagedServicesAndIncrementUsageCount(parent, child);
             }
         }
     }
 
-    void tearDown(Object key) {
+    void tearDown(Object key, boolean isFromComposite) {
         if(key instanceof Services.Composite) {
             Services.Composite composite = (Services.Composite) key;
-            List<Services.Child> children = composite.keys();
+            List<? extends Services.Child> children = composite.keys();
             for(int i = children.size() - 1; i >= 0; i--) {
-                tearDown(children.get(i));
+                tearDown(children.get(i), true);
             }
         }
         decrementAndMaybeRemoveKey(key);
-        if(key instanceof Services.Child) {
-            tearDown(((Services.Child)key).parent());
+        if(!isFromComposite && key instanceof Services.Child) {
+            tearDown(((Services.Child) key).parent(), false);
         }
     }
 
     @NonNull
-    private ReferenceCountedServices ensureNode(@Nullable Services parentServices, Object key) {
+    private ReferenceCountedServices createNonExistentManagedServicesAndIncrementUsageCount(@Nullable Services parentServices, Object key) {
         ReferenceCountedServices node = keyToManagedServicesMap.get(key);
         if(node == null) {
             // @formatter:off
@@ -103,6 +104,7 @@ class ServicesManager {
             node = new ReferenceCountedServices(builder.build());
             keyToManagedServicesMap.put(key, node);
         }
+        node.usageCount++;
         return node;
     }
 
