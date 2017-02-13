@@ -562,5 +562,111 @@ public class ServicesUnitTest {
             assertThat(servicesManager.findServices(_G).getService("G")).isEqualTo("G");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
+
+
+        /////
+        servicesManager.setUp(_D);
+
+        assertThat(servicesManager.findServices(_A).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_B).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_B).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_C).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_C).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_C).getService("C")).isEqualTo("C");
+        assertThat(servicesManager.findServices(_D).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_D).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_D).getService("D")).isEqualTo("D");
+        assertThat(servicesManager.findServices(_E).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_E).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_E).getService("E")).isEqualTo("E");
+        assertThat(servicesManager.findServices(_F).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_F).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_F).getService("D")).isEqualTo("D");
+        assertThat(servicesManager.findServices(_F).getService("F")).isEqualTo("F");
+        assertThat(servicesManager.findServices(_G).getService("A")).isEqualTo("A");
+        assertThat(servicesManager.findServices(_G).getService("B")).isEqualTo("B");
+        assertThat(servicesManager.findServices(_G).getService("D")).isEqualTo("D");
+        assertThat(servicesManager.findServices(_G).getService("G")).isEqualTo("G");
+
+        servicesManager.setUp(_A);
+        servicesManager.tearDown(_D);
+
+        assertThat(servicesManager.findServices(_A).getService("A")).isEqualTo("A");
+        try {
+            assertThat(servicesManager.findServices(_B).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_B).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_C).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_C).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_C).getService("C")).isEqualTo("C");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_D).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_D).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_D).getService("D")).isEqualTo("D");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_E).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_E).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_E).getService("E")).isEqualTo("E");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_F).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_F).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_F).getService("D")).isEqualTo("D");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_F).getService("F")).isEqualTo("F");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_G).getService("A")).isEqualTo("A");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_G).getService("B")).isEqualTo("B");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_G).getService("D")).isEqualTo("D");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
+        try {
+            assertThat(servicesManager.findServices(_G).getService("G")).isEqualTo("G");
+            fail();
+        } catch(IllegalStateException e) { /* OK */ }
     }
 }
