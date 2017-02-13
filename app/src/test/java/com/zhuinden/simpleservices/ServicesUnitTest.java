@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,7 @@ public class ServicesUnitTest {
         });
         ServicesManager servicesManager = new ServicesManager(servicesFactories);
         servicesManager.setUp(key);
-        servicesManager.tearDown(key, false);
+        servicesManager.tearDown(key);
 
         try {
             servicesManager.findServices(key).getService("HELLO");
@@ -104,7 +105,7 @@ public class ServicesUnitTest {
         });
         ServicesManager servicesManager = new ServicesManager(servicesFactories);
         servicesManager.setUp(childKey);
-        servicesManager.tearDown(childKey, false);
+        servicesManager.tearDown(childKey);
 
         try {
             servicesManager.findServices(parentKey).getService("HELLO");
@@ -185,11 +186,11 @@ public class ServicesUnitTest {
         assertThat(servicesManager.findServices(key).getService("HELLO")).isEqualTo(parentService);
         servicesManager.setUp(key);
         assertThat(servicesManager.findServices(key).getService("HELLO")).isEqualTo(parentService);
-        servicesManager.tearDown(key, false);
+        servicesManager.tearDown(key);
         assertThat(servicesManager.findServices(key).getService("HELLO")).isEqualTo(parentService);
-        servicesManager.tearDown(key, false);
+        servicesManager.tearDown(key);
         try {
-            servicesManager.tearDown(key, false);
+            servicesManager.tearDown(key);
             fail();
         } catch(IllegalStateException e) {
             // OK!
@@ -290,7 +291,7 @@ public class ServicesUnitTest {
         assertThat(servicesManager.findServices(childA).getService("HELLO")).isSameAs(parentService);
         assertThat(servicesManager.findServices(childB).getService("HELLO")).isSameAs(parentService);
 
-        servicesManager.tearDown(composite, false);
+        servicesManager.tearDown(composite);
         try {
             assertThat(servicesManager.findServices(composite).getService("HELLO")).isSameAs(parentService);
             fail();
@@ -321,6 +322,40 @@ public class ServicesUnitTest {
 
         try {
             assertThat(servicesManager.findServices(childB).getService("HELLO")).isSameAs(parentService);
+            fail();
+        } catch(IllegalStateException e) {
+            // OK!
+        }
+    }
+
+    @Test
+    public void compositeChildMustBeAChildOfComposite() {
+        class ChildWithParentField
+                implements Services.Child {
+            Services.Composite parent;
+
+            @Override
+            public Object parent() {
+                return parent;
+            }
+        }
+        final ChildWithParentField childA = new ChildWithParentField();
+        final Services.Composite otherComposite = new Services.Composite() {
+            @Override
+            public List<? extends Services.Child> keys() {
+                return Collections.emptyList();
+            }
+        };
+        final Services.Composite composite = new Services.Composite() {
+            @Override
+            public List<ChildWithParentField> keys() {
+                return Arrays.asList(childA);
+            }
+        };
+        childA.parent = otherComposite;
+        ServicesManager servicesManager = new ServicesManager(Collections.<ServicesFactory>emptyList());
+        try {
+            servicesManager.setUp(composite);
             fail();
         } catch(IllegalStateException e) {
             // OK!

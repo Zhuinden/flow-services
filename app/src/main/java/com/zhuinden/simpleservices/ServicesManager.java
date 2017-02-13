@@ -73,7 +73,11 @@ class ServicesManager {
         }
     }
 
-    void tearDown(Object key, boolean isFromComposite) {
+    void tearDown(Object key) {
+        tearDown(key, false);
+    }
+
+    private void tearDown(Object key, boolean isFromComposite) {
         if(key instanceof Services.Composite) {
             Services.Composite composite = (Services.Composite) key;
             List<? extends Services.Child> children = composite.keys();
