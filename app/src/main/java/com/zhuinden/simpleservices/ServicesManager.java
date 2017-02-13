@@ -61,14 +61,21 @@ class ServicesManager {
         ReferenceCountedServices managedService = createNonExistentManagedServicesAndIncrementUsageCount(parent, key);
         parent = managedService.services;
         if(key instanceof Services.Composite) {
-            Services.Composite composite = (Services.Composite) key;
-            List<? extends Services.Child> children = composite.keys();
-            for(int i = 0; i < children.size(); i++) {
-                Services.Child child = children.get(i);
-                if(!child.parent().equals(key)) {
-                    throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
-                }
-                createNonExistentManagedServicesAndIncrementUsageCount(parent, child);
+            buildComposite(key, parent);
+        }
+    }
+
+    private void buildComposite(Object key, Services parent) {
+        Services.Composite composite = (Services.Composite) key;
+        List<? extends Services.Child> children = composite.keys();
+        for(int i = 0; i < children.size(); i++) {
+            Services.Child child = children.get(i);
+            if(!child.parent().equals(key)) {
+                throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
+            }
+            ReferenceCountedServices managedServices = createNonExistentManagedServicesAndIncrementUsageCount(parent, child);
+            if(child instanceof Services.Composite) {
+                buildComposite(child, managedServices.services);
             }
         }
     }
