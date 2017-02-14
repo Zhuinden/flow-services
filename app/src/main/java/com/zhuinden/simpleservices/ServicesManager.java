@@ -43,6 +43,10 @@ class ServicesManager {
         keyToManagedServicesMap.put(ROOT_KEY, new ReferenceCountedServices(ROOT_SERVICES));
     }
 
+    boolean hasServices(Object key) {
+        return keyToManagedServicesMap.containsKey(key);
+    }
+
     Services findServices(Object key) {
         final ReferenceCountedServices managed = keyToManagedServicesMap.get(key);
         if(managed == null) {
@@ -67,12 +71,12 @@ class ServicesManager {
 
     private void buildComposite(Object key, Services parent) {
         Services.Composite composite = (Services.Composite) key;
-        List<? extends Services.Child> children = composite.keys();
+        List<?> children = composite.keys();
         for(int i = 0; i < children.size(); i++) {
-            Services.Child child = children.get(i);
-            if(!child.parent().equals(key)) {
-                throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
-            }
+            Object child = children.get(i);
+//            if(!child.parent().equals(key)) {
+//                throw new IllegalStateException("A composite child must point to its parent in order to inherit its services.");
+//            }
             ReferenceCountedServices managedServices = createNonExistentManagedServicesAndIncrementUsageCount(parent, child);
             if(child instanceof Services.Composite) {
                 buildComposite(child, managedServices.services);
@@ -87,7 +91,7 @@ class ServicesManager {
     private void tearDown(Object key, boolean isFromComposite) {
         if(key instanceof Services.Composite) {
             Services.Composite composite = (Services.Composite) key;
-            List<? extends Services.Child> children = composite.keys();
+            List<?> children = composite.keys();
             for(int i = children.size() - 1; i >= 0; i--) {
                 tearDown(children.get(i), true);
             }
