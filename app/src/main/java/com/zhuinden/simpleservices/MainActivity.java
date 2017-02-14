@@ -8,15 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
-
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.HistoryBuilder;
 import com.zhuinden.simplestack.StateChange;
 import com.zhuinden.simplestack.StateChanger;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -144,7 +141,8 @@ public class MainActivity
                 servicesManager.setUp(newKey);
             }
         }
-        for(Parcelable previousKey : stateChange.getPreviousState()) {
+        for(int i = stateChange.getPreviousState().size() - 1; i >= 0; i--) {
+            Parcelable previousKey = stateChange.getPreviousState().get(i);
             if(servicesManager.hasServices(previousKey) && !stateChange.getNewState().contains(previousKey)) {
                 servicesManager.tearDown(previousKey);
             }
