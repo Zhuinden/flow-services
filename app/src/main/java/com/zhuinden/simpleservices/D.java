@@ -12,7 +12,7 @@ import java.util.List;
 @AutoValue
 public abstract class D
         extends Key
-        implements Services.Composite<Key> {
+        implements Services.Composite {
     @Override
     public int layout() {
         return R.layout.path_d;

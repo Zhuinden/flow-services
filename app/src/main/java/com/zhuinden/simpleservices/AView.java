@@ -36,7 +36,7 @@ public class AView
 
     @OnClick(R.id.a_button)
     public void buttonClick(View view) {
-        StackService.get(view.getContext()).goTo(B.create());
+        StackService.get(view.getContext()).goTo(B.create(Backstack.getKey(getContext())));
     }
 
     @Override

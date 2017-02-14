@@ -54,7 +54,7 @@ public class BView
         MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("B");
         ButterKnife.bind(this);
         B b = Backstack.getKey(getContext());
-        keys = b.<Key>keys();
+        keys = b.keys();
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -81,7 +81,7 @@ public class BView
 
     List<Key> getNestedKeys(Key key) {
         if(key instanceof Services.Composite) {
-            return ((Services.Composite<Key>) key).keys();
+            return ((Services.Composite) key).keys();
         } else {
             return Collections.emptyList();
         }

@@ -12,14 +12,14 @@ import java.util.List;
 @AutoValue
 public abstract class B
         extends Key
-        implements Services.Composite<Key> {
+        implements Services.Composite, Services.Child {
     @Override
     public int layout() {
         return R.layout.path_b;
     }
 
-    public static B create() {
-        return new AutoValue_B();
+    public static B create(A parent) {
+        return new AutoValue_B(parent);
     }
 
     @Override

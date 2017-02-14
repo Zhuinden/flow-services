@@ -26,12 +26,12 @@ import java.util.Map;
 import static com.zhuinden.simpleservices.Preconditions.checkNotNull;
 
 public class Services {
-    public interface Child<T> {
-        T parent();
+    public interface Child {
+        Object parent();
     }
 
-    public interface Composite<T> {
-        List<T> keys();
+    public interface Composite {
+        List keys();
     }
 
     public static final class Builder
