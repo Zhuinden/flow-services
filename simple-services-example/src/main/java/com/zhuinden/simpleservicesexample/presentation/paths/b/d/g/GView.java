@@ -1,38 +1,38 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.presentation.paths.b.d.g;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
-
+import com.zhuinden.simpleservicesexample.application.MainActivity;
 import com.zhuinden.simplestack.Backstack;
 
 /**
  * Created by Zhuinden on 2017.02.14..
  */
 
-public class EView
+public class GView
         extends RelativeLayout {
-    public EView(Context context) {
+    public GView(Context context) {
         super(context);
     }
 
-    public EView(Context context, AttributeSet attrs) {
+    public GView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public GView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(21)
-    public EView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public GView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("E");
+        MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("G");
     }
 }

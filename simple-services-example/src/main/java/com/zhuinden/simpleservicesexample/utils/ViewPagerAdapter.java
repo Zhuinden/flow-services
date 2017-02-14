@@ -1,12 +1,11 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.utils;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.zhuinden.simpleservicesexample.application.Key;
 import com.zhuinden.simplestack.KeyContextWrapper;
-
 import java.util.List;
 
 /**

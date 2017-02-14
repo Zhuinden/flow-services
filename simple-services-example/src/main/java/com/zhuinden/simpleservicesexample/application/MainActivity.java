@@ -1,4 +1,4 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.application;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,15 @@ import android.widget.RelativeLayout;
 import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservices.ServicesFactory;
 import com.zhuinden.simpleservices.ServicesManager;
+import com.zhuinden.simpleservicesexample.R;
+import com.zhuinden.simpleservicesexample.presentation.paths.a.A;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.B;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.c.C;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.d.D;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.d.f.F;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.d.g.G;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.e.E;
+import com.zhuinden.simpleservicesexample.utils.StackService;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.HistoryBuilder;
 import com.zhuinden.simplestack.StateChange;

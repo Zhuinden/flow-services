@@ -1,7 +1,6 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.utils;
 
 import android.content.Context;
-
 import com.zhuinden.simplestack.Backstack;
 
 /**

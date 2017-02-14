@@ -1,13 +1,15 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.presentation.paths.a;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
-
+import com.zhuinden.simpleservicesexample.R;
+import com.zhuinden.simpleservicesexample.application.MainActivity;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.B;
+import com.zhuinden.simpleservicesexample.utils.StackService;
 import com.zhuinden.simplestack.Backstack;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 

@@ -1,6 +1,8 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.presentation.paths.b.d.f;
 
 import com.google.auto.value.AutoValue;
+import com.zhuinden.simpleservicesexample.R;
+import com.zhuinden.simpleservicesexample.application.Key;
 
 /**
  * Created by Zhuinden on 2017.02.14..

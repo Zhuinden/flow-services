@@ -1,4 +1,4 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.application;
 
 import android.os.Parcelable;
 

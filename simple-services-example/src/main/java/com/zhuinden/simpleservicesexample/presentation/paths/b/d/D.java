@@ -1,8 +1,11 @@
-package com.zhuinden.simpleservicesexample;
+package com.zhuinden.simpleservicesexample.presentation.paths.b.d;
 
 import com.google.auto.value.AutoValue;
 import com.zhuinden.simpleservices.Services;
-
+import com.zhuinden.simpleservicesexample.R;
+import com.zhuinden.simpleservicesexample.application.Key;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.d.f.F;
+import com.zhuinden.simpleservicesexample.presentation.paths.b.d.g.G;
 import java.util.Arrays;
 import java.util.List;
 
