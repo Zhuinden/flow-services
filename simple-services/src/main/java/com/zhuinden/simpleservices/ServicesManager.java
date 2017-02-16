@@ -18,6 +18,7 @@ package com.zhuinden.simpleservices;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -180,6 +181,13 @@ public class ServicesManager {
 
         private ReferenceCountedServices(Services services) {
             this.services = services;
+        }
+    }
+
+    public void dumpLogData() {
+        Log.i("ServicesManager", "Services: ");
+        for(Map.Entry<Object, ReferenceCountedServices> entry : keyToManagedServicesMap.entrySet()) {
+            Log.i("ServicesManager", "  [" + entry.getKey() + "] :: " + entry.getValue().usageCount);
         }
     }
 }

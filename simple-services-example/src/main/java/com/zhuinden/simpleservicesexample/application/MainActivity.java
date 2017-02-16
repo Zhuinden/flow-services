@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -27,12 +28,15 @@ import com.zhuinden.simplestack.HistoryBuilder;
 import com.zhuinden.simplestack.StateChange;
 import com.zhuinden.simplestack.StateChanger;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity
         extends AppCompatActivity
         implements StateChanger {
+    private static final String TAG = "MainActivity";
 
     @BindView(R.id.root)
     RelativeLayout root;
@@ -145,14 +149,15 @@ public class MainActivity
 
     @Override
     public void handleStateChange(StateChange stateChange, Callback completionCallback) {
-        if(stateChange.topNewState().equals(stateChange.topPreviousState())) {
-            completionCallback.stateChangeComplete();
-            return;
-        }
-        for(Parcelable newKey : stateChange.getNewState()) {
-            if(!servicesManager.hasServices(newKey)) {
-                servicesManager.setUp(newKey);
-            }
+        Log.i(TAG,
+                Arrays.toString(stateChange.getPreviousState().toArray()) + " :: " + Arrays.toString(stateChange.getNewState().toArray()));
+
+        servicesManager.dumpLogData();
+        Parcelable topNewKey = stateChange.topNewState();
+        boolean isInitializeStateChange = stateChange.getPreviousState().isEmpty();
+        boolean servicesUninitialized = (isInitializeStateChange && !servicesManager.hasServices(topNewKey));
+        if(servicesUninitialized || !isInitializeStateChange) {
+            servicesManager.setUp(topNewKey);
         }
         for(int i = stateChange.getPreviousState().size() - 1; i >= 0; i--) {
             Parcelable previousKey = stateChange.getPreviousState().get(i);
@@ -160,6 +165,18 @@ public class MainActivity
                 servicesManager.tearDown(previousKey);
             }
         }
+        Parcelable topPreviousKey = stateChange.topPreviousState();
+        if(topPreviousKey != null && stateChange.getNewState().contains(topPreviousKey)) {
+            servicesManager.tearDown(topPreviousKey);
+        }
+
+        servicesManager.dumpLogData();
+
+        if(stateChange.topNewState().equals(stateChange.topPreviousState())) {
+            completionCallback.stateChangeComplete();
+            return;
+        }
+
         backstackDelegate.persistViewToState(root.getChildAt(0));
         root.removeAllViews();
         Key newKey = stateChange.topNewState();
