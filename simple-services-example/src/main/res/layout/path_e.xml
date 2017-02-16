@@ -6,8 +6,16 @@
 
     <TextView
         android:text="E"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"/>
+
+    <Button
+        android:id="@+id/e_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Go to H" />
 </com.zhuinden.simpleservicesexample.presentation.paths.b.e.EView>
