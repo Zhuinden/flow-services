@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
+
 import com.zhuinden.simpleservicesexample.application.MainActivity;
+import com.zhuinden.simpleservicesexample.utils.Preconditions;
 import com.zhuinden.simplestack.Backstack;
 
 /**
@@ -33,6 +35,11 @@ public class CView
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("C");
+        Preconditions.checkNotNull(MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("A"),
+                "Service should not be null");
+        Preconditions.checkNotNull(MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("B"),
+                "Service should not be null");
+        Preconditions.checkNotNull(MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("C"),
+                "Service should not be null");
     }
 }

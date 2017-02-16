@@ -10,6 +10,7 @@ import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.application.Key;
 import com.zhuinden.simpleservicesexample.application.MainActivity;
+import com.zhuinden.simpleservicesexample.utils.Preconditions;
 import com.zhuinden.simpleservicesexample.utils.ViewPagerAdapter;
 import com.zhuinden.simplestack.Backstack;
 
@@ -56,7 +57,10 @@ public class BView
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("B");
+        Preconditions.checkNotNull(MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("A"),
+                "Service should not be null");
+        Preconditions.checkNotNull(MainActivity.getServices(getContext()).findServices(Backstack.getKey(getContext())).getService("B"),
+                "Service should not be null");
         ButterKnife.bind(this);
         B b = Backstack.getKey(getContext());
         keys = b.keys();
