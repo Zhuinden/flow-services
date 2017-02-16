@@ -81,6 +81,11 @@ public class MainActivity
                         builder.withService("H", "H");
                     }
                 }
+
+                @Override
+                public void tearDownServices(@NonNull Services services) {
+                    Log.i("ServiceManager", "<[Tearing down :: " + services.getKey() + "]>");
+                }
             }).build();
         } else {
             servicesManager = nonConfigurationInstance.servicesManager;
