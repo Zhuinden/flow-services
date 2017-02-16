@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,14 +34,49 @@ public class ServicesManager {
         }
     };
 
-    private static final Services ROOT_SERVICES = new Services(ROOT_KEY, null, Collections.<String, Object>emptyMap());
+    public static Builder configure() {
+        return new Builder();
+    }
 
+    public static class Builder {
+        Builder() {
+        }
+
+        Map<String, Object> rootServices = new LinkedHashMap<>();
+        List<ServicesFactory> servicesFactories = new LinkedList<>();
+
+        public Builder addServiceFactory(ServicesFactory servicesFactory) {
+            this.servicesFactories.add(servicesFactory);
+            return this;
+        }
+
+        public Builder addServiceFactories(List<? extends ServicesFactory> servicesFactories) {
+            this.servicesFactories.addAll(servicesFactories);
+            return this;
+        }
+
+        public Builder withService(String serviceTag, Object rootService) {
+            rootServices.put(serviceTag, rootService);
+            return this;
+        }
+
+        public ServicesManager build() {
+            return new ServicesManager(new ArrayList<>(servicesFactories), new LinkedHashMap<>(rootServices));
+        }
+    }
+
+    private final Services rootServices;
     private final Map<Object, ReferenceCountedServices> keyToManagedServicesMap = new LinkedHashMap<>();
     private final List<ServicesFactory> servicesFactories = new ArrayList<>();
 
-    public ServicesManager(List<ServicesFactory> servicesFactories) {
+    ServicesManager(List<ServicesFactory> servicesFactories) {
+        this(servicesFactories, Collections.<String, Object>emptyMap());
+    }
+
+    ServicesManager(List<ServicesFactory> servicesFactories, Map<String, Object> rootServices) {
+        this.rootServices = new Services(ROOT_KEY, null, rootServices);
         this.servicesFactories.addAll(servicesFactories);
-        keyToManagedServicesMap.put(ROOT_KEY, new ReferenceCountedServices(ROOT_SERVICES));
+        keyToManagedServicesMap.put(ROOT_KEY, new ReferenceCountedServices(this.rootServices));
     }
 
     public boolean hasServices(Object key) {

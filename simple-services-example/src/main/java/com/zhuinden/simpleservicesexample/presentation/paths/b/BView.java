@@ -5,14 +5,17 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
+
 import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.application.Key;
 import com.zhuinden.simpleservicesexample.application.MainActivity;
 import com.zhuinden.simpleservicesexample.utils.ViewPagerAdapter;
 import com.zhuinden.simplestack.Backstack;
+
 import java.util.Collections;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -83,7 +86,8 @@ public class BView
 
     List<Key> getNestedKeys(Key key) {
         if(key instanceof Services.Composite) {
-            return ((Services.Composite) key).keys();
+            // noinspection unchecked
+            return (List<Key>) ((Services.Composite) key).keys();
         } else {
             return Collections.emptyList();
         }

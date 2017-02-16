@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+
 import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservices.ServicesFactory;
 import com.zhuinden.simpleservices.ServicesManager;
@@ -24,8 +25,7 @@ import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.HistoryBuilder;
 import com.zhuinden.simplestack.StateChange;
 import com.zhuinden.simplestack.StateChanger;
-import java.util.ArrayList;
-import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -55,8 +55,7 @@ public class MainActivity
 
         NonConfigurationInstance nonConfigurationInstance = (NonConfigurationInstance) getLastCustomNonConfigurationInstance();
         if(nonConfigurationInstance == null) {
-            List<ServicesFactory> servicesFactories = new ArrayList<>();
-            servicesFactories.add(new ServicesFactory() {
+            servicesManager = ServicesManager.configure().addServiceFactory(new ServicesFactory() {
                 @Override
                 public void bindServices(@NonNull Services.Builder builder) {
                     if(builder.getKey() instanceof A) {
@@ -75,8 +74,7 @@ public class MainActivity
                         builder.withService("G", "G");
                     }
                 }
-            });
-            servicesManager = new ServicesManager(servicesFactories);
+            }).build();
         } else {
             servicesManager = nonConfigurationInstance.servicesManager;
         }

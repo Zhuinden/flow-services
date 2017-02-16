@@ -1,6 +1,10 @@
 # Change log
 
--Simple Services x.x.x (2017-02-xx)
+-Simple Services 0.0.0 (2017-02-16)
+--------------------------------
+- Changed `ServicesManager` constructor to `ServicesManager.configure()` to allow binding root services
+
+-Simple Services 0.0.0 (2017-02-16)
 --------------------------------
 - Renamed square's services to make the code more clear
 - `TreeKey` and `MultiKey` are `Services.Child` and `Services.Composite`

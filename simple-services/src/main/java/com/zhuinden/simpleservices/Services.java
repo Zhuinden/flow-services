@@ -31,7 +31,7 @@ public class Services {
     }
 
     public interface Composite {
-        List keys();
+        List<?> keys();
     }
 
     public static final class Builder
