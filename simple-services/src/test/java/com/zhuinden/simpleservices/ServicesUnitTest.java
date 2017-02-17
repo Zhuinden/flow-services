@@ -22,36 +22,36 @@ public class ServicesUnitTest {
     public void serviceFactoryBindsServices() {
         Object key = new Object();
         final Object service = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 builder.withService("HELLO", service);
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(key);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(key);
 
-        assertThat(servicesManager.findServices(key).<Object>getService("HELLO")).isSameAs(service);
+        assertThat(serviceManager.findServices(key).<Object>getService("HELLO")).isSameAs(service);
     }
 
     @Test
     public void unbindingServiceMakesItInaccessible() {
         Object key = new Object();
         final Object service = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 builder.withService("HELLO", service);
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(key);
-        servicesManager.tearDown(key);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(key);
+        serviceManager.tearDown(key);
 
         try {
-            servicesManager.findServices(key).getService("HELLO");
+            serviceManager.findServices(key).getService("HELLO");
             fail();
         } catch(IllegalStateException e) {
             // OK!
@@ -68,8 +68,8 @@ public class ServicesUnitTest {
             }
         };
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == parentKey) {
@@ -77,10 +77,10 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(childKey);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(childKey);
 
-        assertThat(servicesManager.findServices(parentKey).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(parentKey).<Object>getService("HELLO")).isSameAs(parentService);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class ServicesUnitTest {
             }
         };
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == parentKey) {
@@ -102,12 +102,12 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(childKey);
-        servicesManager.tearDown(childKey);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(childKey);
+        serviceManager.tearDown(childKey);
 
         try {
-            servicesManager.findServices(parentKey).getService("HELLO");
+            serviceManager.findServices(parentKey).getService("HELLO");
             fail();
         } catch(IllegalStateException e) {
             // OK!
@@ -124,8 +124,8 @@ public class ServicesUnitTest {
             }
         };
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == parentKey) {
@@ -133,12 +133,12 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(childKey);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(childKey);
 
-        assertThat(servicesManager.findServices(parentKey).<Object>getService("HELLO")).isEqualTo(parentService);
-        assertThat(servicesManager.findServices(childKey).<Object>getService("HELLO")).isEqualTo(parentService);
-        assertThat(servicesManager.findServices(childKey).<Object>getService("HELLO")).isEqualTo(servicesManager.findServices(parentKey)
+        assertThat(serviceManager.findServices(parentKey).<Object>getService("HELLO")).isEqualTo(parentService);
+        assertThat(serviceManager.findServices(childKey).<Object>getService("HELLO")).isEqualTo(parentService);
+        assertThat(serviceManager.findServices(childKey).<Object>getService("HELLO")).isEqualTo(serviceManager.findServices(parentKey)
                 .getService("HELLO"));
     }
 
@@ -152,8 +152,8 @@ public class ServicesUnitTest {
             }
         };
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == parentKey) {
@@ -161,10 +161,10 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(childKey);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(childKey);
 
-        assertThat(servicesManager.findServices(childKey).<Object>getService("WORLD")).isNull();
+        assertThat(serviceManager.findServices(childKey).<Object>getService("WORLD")).isNull();
     }
 
 
@@ -172,8 +172,8 @@ public class ServicesUnitTest {
     public void tearingDownKeyMultipleTimesThrowsException() {
         final Object key = new Object();
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == key) {
@@ -181,16 +181,16 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(key);
-        assertThat(servicesManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
-        servicesManager.setUp(key);
-        assertThat(servicesManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
-        servicesManager.tearDown(key);
-        assertThat(servicesManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
-        servicesManager.tearDown(key);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(key);
+        assertThat(serviceManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
+        serviceManager.setUp(key);
+        assertThat(serviceManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
+        serviceManager.tearDown(key);
+        assertThat(serviceManager.findServices(key).<Object>getService("HELLO")).isEqualTo(parentService);
+        serviceManager.tearDown(key);
         try {
-            servicesManager.tearDown(key);
+            serviceManager.tearDown(key);
             fail();
         } catch(IllegalStateException e) {
             // OK!
@@ -222,8 +222,8 @@ public class ServicesUnitTest {
         final Object childAService = new Object();
         final Object childBService = new Object();
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == composite) {
@@ -235,14 +235,14 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(composite);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(composite);
 
-        assertThat(servicesManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
-        assertThat(servicesManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
-        assertThat(servicesManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
-        assertThat(servicesManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
-        assertThat(servicesManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
+        assertThat(serviceManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
+        assertThat(serviceManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
     }
 
     @Test
@@ -270,8 +270,8 @@ public class ServicesUnitTest {
         final Object childAService = new Object();
         final Object childBService = new Object();
         final Object parentService = new Object();
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == composite) {
@@ -283,45 +283,45 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(composite);
-        assertThat(servicesManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
-        assertThat(servicesManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
-        assertThat(servicesManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
-        assertThat(servicesManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
-        assertThat(servicesManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(composite);
+        assertThat(serviceManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
+        assertThat(serviceManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
+        assertThat(serviceManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
+        assertThat(serviceManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
 
-        servicesManager.tearDown(composite);
+        serviceManager.tearDown(composite);
         try {
-            assertThat(servicesManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
+            assertThat(serviceManager.findServices(composite).<Object>getService("HELLO")).isSameAs(parentService);
             fail();
         } catch(IllegalStateException e) {
             // OK!
         }
 
         try {
-            assertThat(servicesManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
+            assertThat(serviceManager.findServices(childA).<Object>getService("WORLD")).isSameAs(childAService);
             fail();
         } catch(IllegalStateException e) {
             // OK!
         }
 
         try {
-            assertThat(servicesManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
+            assertThat(serviceManager.findServices(childB).<Object>getService("CROCODILES")).isSameAs(childBService);
             fail();
         } catch(IllegalStateException e) {
             // OK!
         }
 
         try {
-            assertThat(servicesManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
+            assertThat(serviceManager.findServices(childA).<Object>getService("HELLO")).isSameAs(parentService);
             fail();
         } catch(IllegalStateException e) {
             // OK!
         }
 
         try {
-            assertThat(servicesManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
+            assertThat(serviceManager.findServices(childB).<Object>getService("HELLO")).isSameAs(parentService);
             fail();
         } catch(IllegalStateException e) {
             // OK!
@@ -390,8 +390,8 @@ public class ServicesUnitTest {
         _F.parent = _D;
         _G.parent = _D;
 
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == _A) {
@@ -411,8 +411,8 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(_B);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(_B);
 
         /**
          *
@@ -424,213 +424,213 @@ public class ServicesUnitTest {
          *                            /   \
          *                           F     G
          */
-        assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
-        assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
-        assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
-        assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+        assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+        assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+        assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+        assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
 
-        servicesManager.tearDown(_B);
+        serviceManager.tearDown(_B);
 
         try {
-            assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+            assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+            assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+            assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+            assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
 
 
         /////
-        servicesManager.setUp(_D);
+        serviceManager.setUp(_D);
 
-        assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
-        assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
-        assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
-        assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+        assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+        assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+        assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+        assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
 
-        servicesManager.setUp(_A);
-        servicesManager.tearDown(_D);
+        serviceManager.setUp(_A);
+        serviceManager.tearDown(_D);
 
-        assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+            assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+            assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+            assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+            assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
     }
@@ -706,8 +706,8 @@ public class ServicesUnitTest {
         _F.parent = _D;
         _G.parent = _D;
 
-        List<ServicesFactory> servicesFactories = new ArrayList<>();
-        servicesFactories.add(new ServicesFactory() {
+        List<ServiceFactory> servicesFactories = new ArrayList<>();
+        servicesFactories.add(new ServiceFactory() {
             @Override
             public void bindServices(@NonNull Services.Builder builder) {
                 if(builder.getKey() == _A) {
@@ -727,8 +727,8 @@ public class ServicesUnitTest {
                 }
             }
         });
-        ServicesManager servicesManager = new ServicesManager(servicesFactories);
-        servicesManager.setUp(_B);
+        ServiceManager serviceManager = new ServiceManager(servicesFactories);
+        serviceManager.setUp(_B);
 
         /**
          *
@@ -740,215 +740,215 @@ public class ServicesUnitTest {
          *                            /   \
          *                           F     G
          */
-        assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
-        assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
-        assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
-        assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
-        assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+        assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+        assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+        assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+        assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+        assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
 
-        servicesManager.tearDown(_B);
+        serviceManager.tearDown(_B);
 
         try {
-            assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+            assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+            assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+            assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+            assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
 
 
         /////
-        servicesManager.setUp(_D);
+        serviceManager.setUp(_D);
 
-        //assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
-        //assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
-        //assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
-        //assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
-        //assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
-        //assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
-        //assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
-        //assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
-        //assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
-        assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
-        assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+        //assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+        //assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+        //assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+        //assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+        //assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+        //assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+        //assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+        //assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+        //assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+        assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+        assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
 
-        servicesManager.tearDown(_D);
+        serviceManager.tearDown(_D);
 
         try {
-            assertThat(servicesManager.findServices(_A).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_A).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_B).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_B).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_B).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_C).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_C).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_C).<String>getService("C")).isEqualTo("C");
+            assertThat(serviceManager.findServices(_C).<String>getService("C")).isEqualTo("C");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_D).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_D).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_D).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_D).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_E).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_E).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_E).<String>getService("E")).isEqualTo("E");
+            assertThat(serviceManager.findServices(_E).<String>getService("E")).isEqualTo("E");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_F).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_F).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_F).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_F).<String>getService("F")).isEqualTo("F");
+            assertThat(serviceManager.findServices(_F).<String>getService("F")).isEqualTo("F");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("A")).isEqualTo("A");
+            assertThat(serviceManager.findServices(_G).<String>getService("A")).isEqualTo("A");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("B")).isEqualTo("B");
+            assertThat(serviceManager.findServices(_G).<String>getService("B")).isEqualTo("B");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("D")).isEqualTo("D");
+            assertThat(serviceManager.findServices(_G).<String>getService("D")).isEqualTo("D");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
         try {
-            assertThat(servicesManager.findServices(_G).<String>getService("G")).isEqualTo("G");
+            assertThat(serviceManager.findServices(_G).<String>getService("G")).isEqualTo("G");
             fail();
         } catch(IllegalStateException e) { /* OK */ }
     }

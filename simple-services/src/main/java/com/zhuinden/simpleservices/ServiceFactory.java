@@ -16,7 +16,7 @@ package com.zhuinden.simpleservices;
  */
 import android.support.annotation.NonNull;
 
-public abstract class ServicesFactory {
+public abstract class ServiceFactory {
     /**
      * Sets up any services associated with the key, and make them accessible via the context.
      * Typically this means returning a new context that wraps the given one.

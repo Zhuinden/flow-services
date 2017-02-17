@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.zhuinden.simpleservices.ServiceFactory;
+import com.zhuinden.simpleservices.ServiceManager;
 import com.zhuinden.simpleservices.Services;
-import com.zhuinden.simpleservices.ServicesFactory;
-import com.zhuinden.simpleservices.ServicesManager;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.presentation.paths.a.A;
 import com.zhuinden.simpleservicesexample.utils.StackService;
@@ -36,10 +36,10 @@ public class MainActivity
 
     BackstackDelegate backstackDelegate;
 
-    ServicesManager servicesManager;
+    ServiceManager serviceManager;
 
     public static class NonConfigurationInstance {
-        ServicesManager servicesManager;
+        ServiceManager serviceManager;
         BackstackDelegate.NonConfigurationInstance backstackDelegateNonConfig;
     }
 
@@ -53,7 +53,7 @@ public class MainActivity
 
         NonConfigurationInstance nonConfigurationInstance = (NonConfigurationInstance) getLastCustomNonConfigurationInstance();
         if(nonConfigurationInstance == null) {
-            servicesManager = ServicesManager.configure().addServiceFactory(new ServicesFactory() {
+            serviceManager = ServiceManager.configure().addServiceFactory(new ServiceFactory() {
                 @Override
                 public void bindServices(@NonNull Services.Builder builder) {
                     Key key = builder.getKey();
@@ -62,11 +62,11 @@ public class MainActivity
 
                 @Override
                 public void tearDownServices(@NonNull Services services) {
-                    Log.i("ServicesManager", "<[Tearing down :: " + services.getKey() + "]>");
+                    Log.i("ServiceManager", "<[Tearing down :: " + services.getKey() + "]>");
                 }
             }).build();
         } else {
-            servicesManager = nonConfigurationInstance.servicesManager;
+            serviceManager = nonConfigurationInstance.serviceManager;
         }
 
         backstackDelegate = new BackstackDelegate(this);
@@ -79,7 +79,7 @@ public class MainActivity
     public Object onRetainCustomNonConfigurationInstance() {
         NonConfigurationInstance nonConfigurationInstance = new NonConfigurationInstance();
         nonConfigurationInstance.backstackDelegateNonConfig = backstackDelegate.onRetainCustomNonConfigurationInstance();
-        nonConfigurationInstance.servicesManager = servicesManager;
+        nonConfigurationInstance.serviceManager = serviceManager;
         return nonConfigurationInstance;
     }
 
@@ -117,7 +117,7 @@ public class MainActivity
     @Override
     public Object getSystemService(String name) {
         if(SERVICES.equals(name)) {
-            return servicesManager;
+            return serviceManager;
         }
         if(StackService.TAG.equals(name)) {
             return backstackDelegate.getBackstack();
@@ -125,9 +125,9 @@ public class MainActivity
         return super.getSystemService(name);
     }
 
-    public static ServicesManager getServices(Context context) {
+    public static ServiceManager getServices(Context context) {
         // noinspection ResourceType
-        return (ServicesManager) context.getSystemService(SERVICES);
+        return (ServiceManager) context.getSystemService(SERVICES);
     }
 
     @Override
@@ -135,20 +135,20 @@ public class MainActivity
         Log.i(TAG,
                 Arrays.toString(stateChange.getPreviousState().toArray()) + " :: " + Arrays.toString(stateChange.getNewState().toArray()));
 
-        servicesManager.dumpLogData();
+        serviceManager.dumpLogData();
         Parcelable topNewKey = stateChange.topNewState();
         boolean isInitializeStateChange = stateChange.getPreviousState().isEmpty();
-        boolean servicesUninitialized = (isInitializeStateChange && !servicesManager.hasServices(topNewKey));
+        boolean servicesUninitialized = (isInitializeStateChange && !serviceManager.hasServices(topNewKey));
         if(servicesUninitialized || !isInitializeStateChange) {
-            servicesManager.setUp(topNewKey);
+            serviceManager.setUp(topNewKey);
             Log.i(TAG, "<< Restore [" + topNewKey + "] >>");
             // TODO: RESTORE CHILD HIERARCHY (with setUp?)
         }
         for(int i = stateChange.getPreviousState().size() - 1; i >= 0; i--) {
             Parcelable previousKey = stateChange.getPreviousState().get(i);
-            if(servicesManager.hasServices(previousKey) && !stateChange.getNewState().contains(previousKey)) {
+            if(serviceManager.hasServices(previousKey) && !stateChange.getNewState().contains(previousKey)) {
                 Log.i(TAG, "<< Destroy [" + previousKey + "] >>");
-                servicesManager.tearDown(previousKey);
+                serviceManager.tearDown(previousKey);
                 // TODO: DESTROY
             }
         }
@@ -156,10 +156,10 @@ public class MainActivity
         if(topPreviousKey != null && stateChange.getNewState().contains(topPreviousKey)) {
             Log.i(TAG, "<< Persist [" + topPreviousKey + "] >>");
             // TODO: PERSIST CHILD HIERARCHY (with tearDown?)
-            servicesManager.tearDown(topPreviousKey);
+            serviceManager.tearDown(topPreviousKey);
         }
 
-        servicesManager.dumpLogData();
+        serviceManager.dumpLogData();
 
         if(stateChange.topNewState().equals(stateChange.topPreviousState())) {
             completionCallback.stateChangeComplete();

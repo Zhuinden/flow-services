@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ServicesManager {
+public class ServiceManager {
     static final Object ROOT_KEY = new Object() {
         @Override
         public String toString() {
@@ -44,14 +44,14 @@ public class ServicesManager {
         }
 
         Map<String, Object> rootServices = new LinkedHashMap<>();
-        List<ServicesFactory> servicesFactories = new LinkedList<>();
+        List<ServiceFactory> servicesFactories = new LinkedList<>();
 
-        public Builder addServiceFactory(ServicesFactory servicesFactory) {
-            this.servicesFactories.add(servicesFactory);
+        public Builder addServiceFactory(ServiceFactory serviceFactory) {
+            this.servicesFactories.add(serviceFactory);
             return this;
         }
 
-        public Builder addServiceFactories(List<? extends ServicesFactory> servicesFactories) {
+        public Builder addServiceFactories(List<? extends ServiceFactory> servicesFactories) {
             this.servicesFactories.addAll(servicesFactories);
             return this;
         }
@@ -61,20 +61,20 @@ public class ServicesManager {
             return this;
         }
 
-        public ServicesManager build() {
-            return new ServicesManager(new ArrayList<>(servicesFactories), new LinkedHashMap<>(rootServices));
+        public ServiceManager build() {
+            return new ServiceManager(new ArrayList<>(servicesFactories), new LinkedHashMap<>(rootServices));
         }
     }
 
     private final Services rootServices;
     private final Map<Object, ReferenceCountedServices> keyToManagedServicesMap = new LinkedHashMap<>();
-    private final List<ServicesFactory> servicesFactories = new ArrayList<>();
+    private final List<ServiceFactory> servicesFactories = new ArrayList<>();
 
-    ServicesManager(List<ServicesFactory> servicesFactories) {
+    ServiceManager(List<ServiceFactory> servicesFactories) {
         this(servicesFactories, Collections.<String, Object>emptyMap());
     }
 
-    ServicesManager(List<ServicesFactory> servicesFactories, Map<String, Object> rootServices) {
+    ServiceManager(List<ServiceFactory> servicesFactories, Map<String, Object> rootServices) {
         this.rootServices = new Services(ROOT_KEY, null, rootServices);
         this.servicesFactories.addAll(servicesFactories);
         keyToManagedServicesMap.put(ROOT_KEY, new ReferenceCountedServices(this.rootServices));
@@ -185,9 +185,9 @@ public class ServicesManager {
     }
 
     public void dumpLogData() {
-        Log.i("ServicesManager", "Services: ");
+        Log.i("ServiceManager", "Services: ");
         for(Map.Entry<Object, ReferenceCountedServices> entry : keyToManagedServicesMap.entrySet()) {
-            Log.i("ServicesManager", "  [" + entry.getKey() + "] :: " + entry.getValue().usageCount);
+            Log.i("ServiceManager", "  [" + entry.getKey() + "] :: " + entry.getValue().usageCount);
         }
     }
 }
