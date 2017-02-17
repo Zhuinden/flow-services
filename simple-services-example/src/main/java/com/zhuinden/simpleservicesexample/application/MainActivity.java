@@ -22,6 +22,9 @@ import com.zhuinden.simpleservicesexample.presentation.paths.b.d.f.F;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.d.g.G;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.e.E;
 import com.zhuinden.simpleservicesexample.presentation.paths.h.H;
+import com.zhuinden.simpleservicesexample.presentation.paths.i.I;
+import com.zhuinden.simpleservicesexample.presentation.paths.j.J;
+import com.zhuinden.simpleservicesexample.presentation.paths.k.K;
 import com.zhuinden.simpleservicesexample.utils.StackService;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.HistoryBuilder;
@@ -79,6 +82,12 @@ public class MainActivity
                         builder.withService("G", "G");
                     } else if(builder.getKey() instanceof H) {
                         builder.withService("H", "H");
+                    } else if(builder.getKey() instanceof I) {
+                        builder.withService("I", "I");
+                    } else if(builder.getKey() instanceof J) {
+                        builder.withService("J", "J");
+                    } else if(builder.getKey() instanceof K) {
+                        builder.withService("K", "K");
                     }
                 }
 
