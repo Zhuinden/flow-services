@@ -141,15 +141,21 @@ public class MainActivity
         boolean servicesUninitialized = (isInitializeStateChange && !servicesManager.hasServices(topNewKey));
         if(servicesUninitialized || !isInitializeStateChange) {
             servicesManager.setUp(topNewKey);
+            Log.i(TAG, "<< Restore [" + topNewKey + "] >>");
+            // TODO: RESTORE CHILD HIERARCHY (with setUp?)
         }
         for(int i = stateChange.getPreviousState().size() - 1; i >= 0; i--) {
             Parcelable previousKey = stateChange.getPreviousState().get(i);
             if(servicesManager.hasServices(previousKey) && !stateChange.getNewState().contains(previousKey)) {
+                Log.i(TAG, "<< Destroy [" + previousKey + "] >>");
                 servicesManager.tearDown(previousKey);
+                // TODO: DESTROY
             }
         }
         Parcelable topPreviousKey = stateChange.topPreviousState();
         if(topPreviousKey != null && stateChange.getNewState().contains(topPreviousKey)) {
+            Log.i(TAG, "<< Persist [" + topPreviousKey + "] >>");
+            // TODO: PERSIST CHILD HIERARCHY (with tearDown?)
             servicesManager.tearDown(topPreviousKey);
         }
 
@@ -167,6 +173,6 @@ public class MainActivity
         View view = LayoutInflater.from(newContext).inflate(newKey.layout(), root, false);
         backstackDelegate.restoreViewFromState(view);
         root.addView(view);
-        completionCallback.stateChangeComplete();
+        completionCallback.stateChangeComplete(); // TODO: CLEAR STATES NOT IN
     }
 }
