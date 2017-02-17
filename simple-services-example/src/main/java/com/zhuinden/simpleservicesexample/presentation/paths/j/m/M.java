@@ -1,6 +1,7 @@
 package com.zhuinden.simpleservicesexample.presentation.paths.j.m;
 
 import com.google.auto.value.AutoValue;
+import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservicesexample.application.Key;
 
 /**
@@ -16,5 +17,10 @@ public abstract class M
 
     public static M create() {
         return new AutoValue_M();
+    }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("M", "M");
     }
 }

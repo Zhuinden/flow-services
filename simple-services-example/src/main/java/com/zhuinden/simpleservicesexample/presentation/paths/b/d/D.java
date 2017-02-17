@@ -6,6 +6,7 @@ import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.application.Key;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.d.f.F;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.d.g.G;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,5 +30,10 @@ public abstract class D
     @Override
     public List<Key> keys() {
         return Arrays.asList(F.create(), G.create());
+    }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("D", "D");
     }
 }

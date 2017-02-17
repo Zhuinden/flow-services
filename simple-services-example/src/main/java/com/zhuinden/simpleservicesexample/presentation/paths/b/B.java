@@ -8,6 +8,7 @@ import com.zhuinden.simpleservicesexample.presentation.paths.a.A;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.c.C;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.d.D;
 import com.zhuinden.simpleservicesexample.presentation.paths.b.e.E;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,5 +32,10 @@ public abstract class B
     @Override
     public List<Key> keys() {
         return Arrays.asList(C.create(), D.create(), E.create());
+    }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("B", "B");
     }
 }

@@ -1,6 +1,7 @@
 package com.zhuinden.simpleservicesexample.presentation.paths.b.c;
 
 import com.google.auto.value.AutoValue;
+import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.application.Key;
 
@@ -18,5 +19,10 @@ public abstract class C
 
     public static C create() {
         return new AutoValue_C();
+    }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("C", "C");
     }
 }

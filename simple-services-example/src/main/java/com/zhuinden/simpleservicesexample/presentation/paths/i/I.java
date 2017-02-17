@@ -23,4 +23,9 @@ public abstract class I
     public static I create(Key parent) {
         return new AutoValue_I(parent);
     }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("I", "I");
+    }
 }

@@ -33,4 +33,9 @@ public abstract class J
     public static J create(Key parent) {
         return new AutoValue_J(parent);
     }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("J", "J");
+    }
 }

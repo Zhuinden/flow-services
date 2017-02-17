@@ -15,16 +15,6 @@ import com.zhuinden.simpleservices.ServicesFactory;
 import com.zhuinden.simpleservices.ServicesManager;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.presentation.paths.a.A;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.B;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.c.C;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.d.D;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.d.f.F;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.d.g.G;
-import com.zhuinden.simpleservicesexample.presentation.paths.b.e.E;
-import com.zhuinden.simpleservicesexample.presentation.paths.h.H;
-import com.zhuinden.simpleservicesexample.presentation.paths.i.I;
-import com.zhuinden.simpleservicesexample.presentation.paths.j.J;
-import com.zhuinden.simpleservicesexample.presentation.paths.k.K;
 import com.zhuinden.simpleservicesexample.utils.StackService;
 import com.zhuinden.simplestack.BackstackDelegate;
 import com.zhuinden.simplestack.HistoryBuilder;
@@ -66,29 +56,8 @@ public class MainActivity
             servicesManager = ServicesManager.configure().addServiceFactory(new ServicesFactory() {
                 @Override
                 public void bindServices(@NonNull Services.Builder builder) {
-                    if(builder.getKey() instanceof A) {
-                        builder.withService("A", "A");
-                    } else if(builder.getKey() instanceof B) {
-                        builder.withService("B", "B");
-                    } else if(builder.getKey() instanceof C) {
-                        builder.withService("C", "C");
-                    } else if(builder.getKey() instanceof D) {
-                        builder.withService("D", "D");
-                    } else if(builder.getKey() instanceof E) {
-                        builder.withService("E", "E");
-                    } else if(builder.getKey() instanceof F) {
-                        builder.withService("F", "F");
-                    } else if(builder.getKey() instanceof G) {
-                        builder.withService("G", "G");
-                    } else if(builder.getKey() instanceof H) {
-                        builder.withService("H", "H");
-                    } else if(builder.getKey() instanceof I) {
-                        builder.withService("I", "I");
-                    } else if(builder.getKey() instanceof J) {
-                        builder.withService("J", "J");
-                    } else if(builder.getKey() instanceof K) {
-                        builder.withService("K", "K");
-                    }
+                    Key key = builder.getKey();
+                    key.bindServices(builder);
                 }
 
                 @Override

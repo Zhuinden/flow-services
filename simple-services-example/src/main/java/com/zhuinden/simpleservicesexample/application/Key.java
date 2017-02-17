@@ -2,6 +2,8 @@ package com.zhuinden.simpleservicesexample.application;
 
 import android.os.Parcelable;
 
+import com.zhuinden.simpleservices.Services;
+
 /**
  * Created by Zhuinden on 2017.02.14..
  */
@@ -9,4 +11,6 @@ import android.os.Parcelable;
 public abstract class Key
         implements Parcelable {
     public abstract int layout();
+
+    public abstract void bindServices(Services.Builder builder);
 }

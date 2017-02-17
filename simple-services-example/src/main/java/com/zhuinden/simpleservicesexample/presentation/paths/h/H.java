@@ -1,6 +1,7 @@
 package com.zhuinden.simpleservicesexample.presentation.paths.h;
 
 import com.google.auto.value.AutoValue;
+import com.zhuinden.simpleservices.Services;
 import com.zhuinden.simpleservicesexample.R;
 import com.zhuinden.simpleservicesexample.application.Key;
 
@@ -18,5 +19,10 @@ public abstract class H
     @Override
     public int layout() {
         return R.layout.path_h;
+    }
+
+    @Override
+    public void bindServices(Services.Builder builder) {
+        builder.withService("H", "H");
     }
 }
