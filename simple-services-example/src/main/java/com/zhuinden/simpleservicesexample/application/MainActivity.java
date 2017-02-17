@@ -62,7 +62,7 @@ public class MainActivity
 
                 @Override
                 public void tearDownServices(@NonNull Services services) {
-                    Log.i("ServiceManager", "<[Tearing down :: " + services.getKey() + "]>");
+                    Log.i("ServicesManager", "<[Tearing down :: " + services.getKey() + "]>");
                 }
             }).build();
         } else {
