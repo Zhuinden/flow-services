@@ -1,4 +1,4 @@
-# Simple Services
+# Flow Services
 
 This is `Flow.Services` from `square/flow`, with just the services, and some stuff renamed.
 
